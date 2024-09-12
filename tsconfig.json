@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    // Enable latest features
+    "target": "ESNext",
+    "module": "ESNext",
+    "strict": true,
+    "esModuleInterop": true,
+  },
+  "include": ["./src/**/*"],
+}
