@@ -1,4 +1,4 @@
-import { BenchMarkResult } from "../types/types";
+import { BenchmarkResult } from "../types/types";
 
 /**
    * Mide el tiempo de ejecución de una función sincrónica.
@@ -7,7 +7,7 @@ import { BenchMarkResult } from "../types/types";
   * @returns El resultado del benchmark con el tiempo en nanosegundos.
  */
 
-export function benchmark(fn: () => void, functionName: string): BenchMarkResult {
+export function benchmark(fn: () => void, functionName: string): BenchmarkResult {
   const start = Bun.nanoseconds();
   try {
     fn();

@@ -1,4 +1,4 @@
-import { BenchMarkResult } from "../types/types";
+import { BenchmarkResult } from "../types/types";
 
 /**
    * Mide el tiempo de ejecución de una función asíncrona.
@@ -7,7 +7,7 @@ import { BenchMarkResult } from "../types/types";
   * @returns El resultado del benchmark asíncrono con el tiempo en nanosegundos.
  */
 
-export async function asyncBenchmark(fn: () => Promise<void>, functionName: string): Promise<BenchMarkResult> {
+export async function asyncBenchmark(fn: () => Promise<void>, functionName: string): Promise<BenchmarkResult> {
   const start = Bun.nanoseconds();
   try {
     await fn();

@@ -1,5 +1,6 @@
 import { benchmark } from "./src/core/benchmark";
 import { asyncBenchmark } from "./src/core/async-benchmark";
+import { compareBenchmarks } from "./src/core/compareBenchmark";
 
 console.log("Hello via Bun!");
 
@@ -26,3 +27,9 @@ runAsync();
 
 const result = benchmark(count, "count");
 console.log(result);
+
+const results = compareBenchmarks([
+  { fn: count, name: "count" },
+  { fn: fetchAsync, name: "fetchAsync" },
+]);
+console.log(results);
