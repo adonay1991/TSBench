@@ -1,39 +1,92 @@
-import type { ProfilerState } from "../types/types";
+ import type { ProfilerState } from "../types/types";
 
-function createProfiler(): ProfilerState {
-	return { sections: {} };
+// let internalProfiler: ProfilerState | null = null;
+
+// function createProfiler(): ProfilerState {
+// 	return { sections: {} };
+// }
+
+// //TODO: docmuntación (ver notion)
+// // marca el inicio de una sección
+// function startSection(sectionName: string) {
+// 	console.log('startSection', internalProfiler);
+//   if (!internalProfiler) {
+//     throw new Error("Profiler has not been initialized. Ensure you are using benchmark correctly.");
+//   }
+
+//   if (internalProfiler.sections[sectionName]) {
+//     throw new Error(`Section '${sectionName}' already started.`);
+//   }
+
+//   internalProfiler.sections[sectionName] = Bun.nanoseconds();
+// }
+
+// //TODO: docmuntación (ver notion)
+// // marca el final de una sección
+// function endSection(sectionName: string) {
+//   if (!internalProfiler || !internalProfiler.sections[sectionName]) {
+//     throw new Error(`Section '${sectionName}' was not started.`);
+//   }
+
+//   internalProfiler.sections[sectionName] = Bun.nanoseconds() - internalProfiler.sections[sectionName];
+// }
+
+//  function getReport(state: ProfilerState): any {
+//   const report: { [key: string]: number } = {};
+//   for (const section in state.sections) {
+//     report[section] = Number(state.sections[section]) / 1e6; // Convertimos nanosegundos a milisegundos
+//   }
+//   return report;
+// }
+
+// export { createProfiler, startSection, endSection, getReport };
+
+let internalProfiler: ProfilerState | null = null;
+
+ function createProfiler(): ProfilerState {
+  return {
+    sections: {},
+  };
 }
 
-//TODO: docmuntación (ver notion)
-// marca el inicio de una sección
-function startSection(
-	state: ProfilerState,
-	sectionName: string,
-): ProfilerState {
-	//console.log("startsection", state, sectionName);
-	state.sections[sectionName] = Bun.nanoseconds();
-	return state;
+ function setProfiler(profiler: ProfilerState | null) {
+  internalProfiler = profiler;
 }
 
-//TODO: docmuntación (ver notion)
-// marca el final de una sección
-function endSection(state: ProfilerState, sectionName: string): ProfilerState {
-	//console.log("endsection", state);
-	const startTime = state.sections[sectionName];
-	if (startTime) {
-		state.sections[sectionName] = Bun.nanoseconds() - Number(startTime);
-	}
-	return state;
+ function getProfiler(): ProfilerState | null {
+  return internalProfiler;
 }
 
-//TODO: tipado y docmuntación (ver notion)
-// genera el reporte final y convierte los tiempos a milisegundos
-function getReport(state: ProfilerState): any {
-	const report: { [key: string]: number } = {};
-	for (const section in state.sections) {
-		report[section] = Number(state.sections[section]) / 1e6; // Convierte nanosegundos a milisegundos
-	}
-	return report;
+
+ function startSection(sectionName: string) {
+  const profiler = getProfiler();
+  if (!profiler) {
+    throw new Error("Profiler has not been initialized. Ensure you are using benchmark correctly.");
+  }
+
+  if (profiler.sections[sectionName]) {
+    throw new Error(`Section '${sectionName}' already started.`);
+  }
+
+  profiler.sections[sectionName] = Bun.nanoseconds();
 }
 
-export { createProfiler, startSection, endSection, getReport };
+ function endSection(sectionName: string) {
+  const profiler = getProfiler();
+  if (!profiler || !profiler.sections[sectionName]) {
+    throw new Error(`Section '${sectionName}' was not started.`);
+  }
+
+  profiler.sections[sectionName] = Bun.nanoseconds() - profiler.sections[sectionName];
+}
+
+ function getReport(state: ProfilerState): any {
+  const report: { [key: string]: number } = {};
+  for (const section in state.sections) {
+    report[section] = Number(state.sections[section]) / 1e6; // Convertimos nanosegundos a milisegundos
+  }
+  return report;
+}
+
+
+export { createProfiler, startSection, endSection, getReport, setProfiler, getProfiler };

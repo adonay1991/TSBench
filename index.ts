@@ -1,5 +1,5 @@
 import { benchmark } from "./src/core/benchmark";
-import { startSection, endSection, createProfiler } from "./src/core/profiler";
+import { startSection, endSection,  } from "./src/core/profiler";
 import { asyncBenchmark } from "./src/core/async-benchmark";
 import { compareBenchmarks } from "./src/core/compareBenchmark";
 
@@ -26,8 +26,8 @@ async function fetchAsync() {
 
 // runAsync();
 
-const result = benchmark(count, "count");
-console.log(result);
+// const result = benchmark(count, "count");
+// console.log(result);
 
 // const results = compareBenchmarks([
 //   { fn: count, name: "count" },
@@ -36,28 +36,21 @@ console.log(result);
 // console.log(results);
 
 
-// TODO: el usuario no deberia porq usar el profiler como param y mucho menos usar un tipo
-function granularBenchmark(profiler: any) {
-	// Primer proceso
-	//console.log("Process 1");
-	profiler = startSection(profiler, "Process 1");
-	for (let i = 0; i < 1e6; i++) {} // Simula un trabajo en Process 1
-	profiler = endSection(profiler, "Process 1");
+function granularBenchmark() {
+  // Primer proceso
+  startSection( "Process 1");
+  for (let i = 0; i < 1e6; i++) {} // Simula un trabajo en Process 1
+  endSection( "Process 1");
 
-	// Segundo proceso
-	//console.log("Process 2");
-	profiler = startSection(profiler, "Process 2");
-	for (let i = 0; i < 2e6; i++) {} // Simula un trabajo en Process 2
-	profiler = endSection(profiler, "Process 2");
+  // Segundo proceso
+  startSection( "Process 2");
+  for (let i = 0; i < 2e6; i++) {} // Simula un trabajo en Process 2
+  endSection( "Process 2");
 
-	// Tercer proceso
-	//console.log("Process 3");
-	profiler = startSection(profiler, "Process 3");
-	for (let i = 0; i < 3e6; i++) {} // Simula un trabajo en Process 3
-	profiler = endSection(profiler, "Process 3");
-
-	console.log("Result", profiler);
-	return profiler;
+  // Tercer proceso
+  startSection( "Process 3");
+  for (let i = 0; i < 3e6; i++) {} // Simula un trabajo en Process 3
+  endSection( "Process 3");
 }
 
 const granularResult = benchmark(granularBenchmark, "granularBenchmark", true);

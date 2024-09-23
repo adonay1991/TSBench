@@ -4,6 +4,8 @@ import {
 	startSection,
 	endSection,
 	getReport,
+  setProfiler,
+  getProfiler
 } from "./profiler";
 
 
@@ -15,53 +17,51 @@ import {
  * @returns El resultado del benchmark con el tiempo en nanosegundos.
  */
 
+// benchmark.ts
 export function benchmark(
-	fn: (profiler?: ProfilerState) => void,
-	functionName: string,
-	detailedReport?: boolean,
+  fn: () => void,
+  functionName: string,
+  detailedReport?: boolean
 ): BenchmarkResult {
-	if (typeof fn !== "function") {
-		throw new Error("fn must be a function");
-	}
+  if (typeof fn !== "function") {
+    throw new Error("fn must be a function");
+  }
 
-	let profiler: ProfilerState | undefined;
+  // Inicializar el profiler
+  const profiler = createProfiler();
+  setProfiler(profiler);
 
-	// si se solicita un reporte detallado, inicia el perfilador
-	if (detailedReport) {
-		console.warn("Generating detailed report...");
-		profiler = createProfiler();
-		profiler = startSection(profiler, functionName);
-		console.log("profiler benchmark", profiler);
-	}
+  const start = Bun.nanoseconds();
+  try {
+    fn(); // Ejecutar la función que contiene las secciones
+  } catch (error) {
+    setProfiler(null); // Limpiar el profiler en caso de error
+    return {
+      functionName,
+      time: 0,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
 
-	const start = Bun.nanoseconds();
-	let result: BenchmarkResult;
+  const end = Bun.nanoseconds();
 
-	try {
-		// se ejecuta la función
-		fn(profiler);
-		const end = Bun.nanoseconds();
+  if (detailedReport) {
+    const report = getReport(getProfiler()!);
+    setProfiler(null); // Limpiar el profiler después del reporte
+    return {
+      functionName,
+      time: end - start,
+      report,
+    };
+  }
 
-		if (detailedReport && profiler) {
-			profiler = endSection(profiler, functionName);
-			result = {
-				functionName,
-				time: end - start,
-				report: getReport(profiler),
-			};
-		} else {
-			result = {
-				functionName,
-				time: end - start,
-			};
-		}
-	} catch (error) {
-		result = {
-			functionName,
-			time: Number(0n),
-			error: error instanceof Error ? error.message : "Unknown error",
-		};
-	}
+  // Limpiar el profiler después de la ejecución
+  setProfiler(null);
 
-	return result;
+  return {
+    functionName,
+    time: end - start,
+  };
 }
+
+
