@@ -26,8 +26,7 @@ async function fetchAsync() {
 
 // runAsync();
 
-// const result = benchmark(count, "count");
-// console.log(result);
+benchmark(count, "count");
 
 // const results = compareBenchmarks([
 //   { fn: count, name: "count" },
@@ -49,9 +48,8 @@ function granularBenchmark() {
 
   // Tercer proceso
   startSection( "Process 3");
-  for (let i = 0; i < 3e6; i++) {} // Simula un trabajo en Process 3
+  for (let i = 0; i < 100e6; i++) {} // Simula un trabajo en Process 3
   endSection( "Process 3");
 }
 
-const granularResult = benchmark(granularBenchmark, "granularBenchmark", true);
-console.log(granularResult);
+benchmark(granularBenchmark, "granularBenchmark", true);

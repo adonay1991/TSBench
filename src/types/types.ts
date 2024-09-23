@@ -1,10 +1,10 @@
 export type BenchmarkResult = {
-	functionName: string;
-	time?: number;
-	error?: string;
-	detailedReport?: boolean;
-	report?: { [key: string]: any };
-};
+  functionName: string;
+  time?: number;
+  error?: string;
+  detailedReport?: boolean;
+  report?: { [key: string]: any };
+} | null | void;
 
 export type Reports = {
 	fn?: () => void;

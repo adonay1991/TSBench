@@ -8,6 +8,8 @@ import {
   getProfiler
 } from "./profiler";
 
+import drawReportBox from "../utils/report-box";
+
 
 // TODO: actualizar documentación
 /**
@@ -48,20 +50,13 @@ export function benchmark(
   if (detailedReport) {
     const report = getReport(getProfiler()!);
     setProfiler(null); // Limpiar el profiler después del reporte
-    return {
-      functionName,
-      time: end - start,
-      report,
-    };
+    return drawReportBox(functionName, (end - start), report);
   }
 
   // Limpiar el profiler después de la ejecución
   setProfiler(null);
 
-  return {
-    functionName,
-    time: end - start,
-  };
+  return drawReportBox(functionName, (end - start));
 }
 
 

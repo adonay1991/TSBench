@@ -77,7 +77,7 @@ let internalProfiler: ProfilerState | null = null;
     throw new Error(`Section '${sectionName}' was not started.`);
   }
 
-  profiler.sections[sectionName] = Bun.nanoseconds() - profiler.sections[sectionName];
+  profiler.sections[sectionName] = Bun.nanoseconds() - Number(profiler.sections[sectionName]);
 }
 
  function getReport(state: ProfilerState): any {
